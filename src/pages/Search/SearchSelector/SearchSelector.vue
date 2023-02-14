@@ -4,19 +4,19 @@
       <div class="fl key brand">品牌</div>
       <div class="value logos">
         <ul class="logo-list">
-          <li v-for="mark in trademark" :key="mark.tmId">{{mark.tmName}}</li>
-
+          <li v-for="item in trademark" :key="item.tmId" @click="getBrand(item)">{{item.tmName}}</li>
         </ul>
       </div>
       <div class="ext">
+        <a href="javascript:void(0);">更多</a>
       </div>
     </div>
     <div class="type-wrap" v-for="attr in attrsList" :key="attr.attrId">
       <div class="fl key">{{attr.attrName}}</div>
       <div class="fl value">
         <ul class="type-list">
-          <li v-for="(details,index) in attr.attrValueList" :key="index">
-            <a>{{details}}</a>
+          <li v-for="(item,index) in attr.attrValueList" :key="index" @click="getAttr(item,attr)">
+            <a>{{item}}</a>
           </li>
 
         </ul>
@@ -32,8 +32,17 @@ import { mapGetters } from 'vuex'
 export default {
   name: 'SearchSelector',
   computed: {
-    // 获取仓库中的数据
     ...mapGetters(['attrsList', 'trademark'])
+  },
+  methods: {
+    // 点击品牌
+    getBrand(value) {
+      this.$emit('getBrand', value)
+    },
+    // 点击属性
+    getAttr(item, attr) {
+      this.$emit('getAttr', item, attr)
+    }
   }
 }
 </script>

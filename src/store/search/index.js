@@ -26,15 +26,15 @@ const getters = {
   // 简化数据
   // 属性数据
   attrsList(state) {
-    return state.searchInfo.attrsList
+    return state.searchInfo.attrsList || []
   },
   // 商品数据
   goodsList(state) {
-    return state.searchInfo.goodsList
+    return state.searchInfo.goodsList || []
   },
   // tradeMark
   trademark(state) {
-    return state.searchInfo.trademarkList
+    return state.searchInfo.trademarkList || []
   }
 }
 

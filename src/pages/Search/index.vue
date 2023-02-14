@@ -11,15 +11,20 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <!-- categoryName的面包屑 -->
+            <li class="with-x" v-if="searchParams.categoryName">{{searchParams.categoryName}}<i @click="removeCategory">×</i></li>
+            <!-- keyword的面包屑 -->
+            <li class="with-x" v-if="searchParams.keyword">{{searchParams.keyword}}<i @click="removeKeyword">×</i></li>
+            <!-- 点击brand，添加面包屑 -->
+            <li class="with-x" v-if="searchParams.trademark">{{searchParams.trademark.split(":")[1]}}<i @click="removeBrand">×</i></li>
+            <!-- 属性面包屑，可以有多个，遍历数组 -->
+            <li class="with-x" v-for="(attr,index) in searchParams.props" :key="index">{{attr.split(':')[1]}}<i @click="removeAttr(index)">×</i></li>
+
           </ul>
         </div>
 
         <!--selector-->
-        <SearchSelector></SearchSelector>
+        <SearchSelector @getBrand='getBrand' @getAttr='getAttr'></SearchSelector>
 
         <!--details-->
         <div class="details clearfix">
@@ -114,22 +119,105 @@ import { mapGetters } from 'vuex'
 import SearchSelector from './SearchSelector/SearchSelector'
 export default {
   name: 'Search',
-
+  data() {
+    return {
+      searchParams: {
+        // 一二三级分类
+        category1Id: '',
+        category2Id: '',
+        category3Id: '',
+        // 分类名称
+        categoryName: '',
+        // 关键字
+        keyword: '',
+        // 商品属性的数组: ["属性ID:属性值:属性名"]  示例: ["2:6.0～6.24英寸:屏幕尺寸"]
+        props: [],
+        // 品牌  "ID:品牌名称"
+        trademark: '',
+        // 排序方式
+        order: '',
+        // 当前页码
+        pageNo: '1',
+        // 每页数量
+        pageSize: '10'
+      },
+      brandName: ''
+    }
+  },
   components: {
     SearchSelector
   },
   mounted() {
     this.getData()
   },
+  beforeMount() {
+    // 在结构没挂载完毕之前，将传递过来的数据，合并到一个对象中
+    Object.assign(this.searchParams, this.$route.query, this.$route.params)
+  },
   methods: {
     // 把获取商品信息的数据封装成一个方法，信息更新后就能快速重新调用，获取最新的数据
     getData() {
-      this.$store.dispatch('getSearchInfo', {})
+      this.$store.dispatch('getSearchInfo', this.searchParams)
+    },
+    // 点击叉号，关闭categoryName
+    removeCategory() {
+      // 置空categoryName   置为undefined,发起请求，不再携带这个参数，优化
+      this.searchParams.categoryName = undefined
+      this.searchParams.category1Id = undefined
+      this.searchParams.category2Id = undefined
+      this.searchParams.category3Id = undefined
+      // 将$router中的query中的参数删掉   最好的方法就是重新发一次请求，不带query就好
+      this.$router.push({ name: 'search', params: this.$route.params })
+      this.getData()
+    },
+    // 点击叉号，删除keyword
+    removeKeyword() {
+      this.searchParams.keyword = undefined
+      this.$router.push({ name: 'search', query: this.$route.query })
+      this.getData()
+    },
+    // 点击子组件中的brand,点击的按钮信息传递过来  "ID:品牌名称"
+    getBrand(value) {
+      let str = `${value.tmId}:${value.tmName}`
+      this.searchParams.trademark = str
+      this.getData()
+    },
+    // 点击属性，将属性的信息传递过来
+    getAttr(item, attrs) {
+      let str = `${attrs.attrId}:${item}:${attrs.attrName}`
+      // 如果数组中已经有了这个数据之后，就不再push
+      if (this.searchParams.props.indexOf(str) == -1) {
+        this.searchParams.props.push(str)
+      }
+      this.getData()
+    },
+    // 清除品牌名的面包屑
+    removeBrand() {
+      this.searchParams.trademark = undefined
+      this.getData()
+    },
+    // 清除属性attr
+    removeAttr(index) {
+      this.searchParams.props.splice(index, 1)
+      this.getData()
     }
   },
   computed: {
     // 获取仓库中的数据
     ...mapGetters(['goodsList'])
+  },
+  // 在search页面中按条件搜索，需要监听$router的变化
+  watch: {
+    $route() {
+      // 如果$route中的数据有变化，就重新合并对象
+      Object.assign(this.searchParams, this.$route.params, this.$route.query)
+      // 为了防止冲突，每次请求完，都清空一二三级分类的数据
+      this.category1Id = ''
+      this.category2Id = ''
+      this.category3Id = ''
+      // 重新发起请求，获取操作后的数据
+      this.getData()
+    }
   }
 }
 </script>

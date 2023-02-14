@@ -85,13 +85,13 @@ export default {
         name: 'search'
       }
       // 把点击的categoryName传过去
-      let query = { categoryname: categoryname }
+      let query = { categoryName: categoryname }
       if (category1id) {
-        query.category1id = category1id
+        query.category1Id = category1id
       } else if (category2id) {
-        query.category2id = category2id
+        query.category2Id = category2id
       } else if (category3id) {
-        query.category3id = category3id
+        query.category3Id = category3id
       }
       location.query = query
       // 如果有params参数，把他也一起传过去
