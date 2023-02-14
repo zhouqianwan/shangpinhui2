@@ -31,23 +31,11 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{active:isOne}" @click="orderChange(1)">
+                  <a>综合 <span v-if="isOne&&isAsc">↑</span><span v-if="isOne&&isDesc">↓</span></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{active:isTwo}" @click="orderChange(2)">
+                  <a>价格<span v-if="isTwo&&isAsc">↑</span><span v-if="isTwo&&isDesc">↓</span></a>
                 </li>
               </ul>
             </div>
@@ -135,7 +123,7 @@ export default {
         // 品牌  "ID:品牌名称"
         trademark: '',
         // 排序方式
-        order: '',
+        order: '1:desc',
         // 当前页码
         pageNo: '1',
         // 每页数量
@@ -200,11 +188,46 @@ export default {
     removeAttr(index) {
       this.searchParams.props.splice(index, 1)
       this.getData()
+    },
+    orderChange(value) {
+      // 获取之前存在searchParams中的数据
+      let originOrder = this.searchParams.order
+      // 方向
+      let originSort = originOrder.split(':')[1]
+      // 排序方式
+      let originFlag = originOrder.split(':')[0]
+      let newOrder = ''
+      // 如果点击的和之前的是同一个，排序方式不变，方向相反
+      // 如果点击的和之前不同，排序方式改变，方向变为降序
+      if (value == originFlag) {
+        newOrder = `${originFlag}:${originSort == 'asc' ? 'desc' : 'asc'}`
+      } else {
+        newOrder = `${value}:desc`
+      }
+      this.searchParams.order = newOrder
+      this.getData()
     }
   },
   computed: {
     // 获取仓库中的数据
-    ...mapGetters(['goodsList'])
+    ...mapGetters(['goodsList']),
+    // 使用计算属性，算出是升序还是降序  是综合还是价格
+    // 是不是综合 (包不包含1)
+    isOne() {
+      return this.searchParams.order.indexOf('1') != -1
+    },
+    // 看是不是价格（包不包含2）
+    isTwo() {
+      return this.searchParams.order.indexOf('2') != -1
+    },
+    // 是不是升序
+    isAsc() {
+      return this.searchParams.order.indexOf('asc') != -1
+    },
+    // 是不是降序
+    isDesc() {
+      return this.searchParams.order.indexOf('desc') != -1
+    }
   },
   // 在search页面中按条件搜索，需要监听$router的变化
   watch: {
@@ -223,6 +246,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.active {
+  background-color: red;
+}
 .main {
   margin: 10px 0;
 
