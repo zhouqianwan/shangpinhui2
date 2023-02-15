@@ -67,43 +67,17 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
         </div>
+        <!-- 先通过自定义属性，往子组件中传递几条固定的假数据 -->
+        <!-- 通过自定义事件，将pageNo的值传递更新 -->
+        <Pagination :total="total" :pageNo='this.searchParams.pageNo' :continues='5' :pageSize='this.searchParams.pageSize' @getPageNo='getPageNo'></Pagination>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import SearchSelector from './SearchSelector/SearchSelector'
 export default {
   name: 'Search',
@@ -206,6 +180,11 @@ export default {
       }
       this.searchParams.order = newOrder
       this.getData()
+    },
+    // 点击分页器更新pageNo的值
+    getPageNo(value) {
+      this.searchParams.pageNo = value
+      this.getData()
     }
   },
   computed: {
@@ -227,7 +206,10 @@ export default {
     // 是不是降序
     isDesc() {
       return this.searchParams.order.indexOf('desc') != -1
-    }
+    },
+    ...mapState({
+      total: state => state.search.searchInfo.total
+    })
   },
   // 在search页面中按条件搜索，需要监听$router的变化
   watch: {

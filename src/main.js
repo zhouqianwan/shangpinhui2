@@ -19,6 +19,9 @@ import 'swiper/swiper-bundle.min.css'
 // 引入carousel,将轮播图封装成一个独立的组件
 import Carousel from '@/components/Carousel'
 Vue.component('Carousel', Carousel)
+// 把分页器注册为全局组件
+import Pagination from '@/components/Pagination'
+Vue.component('Pagination', Pagination)
 
 
 new Vue({
