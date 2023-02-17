@@ -13,3 +13,19 @@ export const reqFloorList = () => mockRequests({ url: '/floor', method: 'get' })
 
 // 获取search里面商品详情   url:/api/list   method:'get'
 export const reqSearchInfo = (params) => requests({ url: '/list', method: 'post', data: params })
+
+// 获取商品详情   url:/api/item/{ skuId }  method:get
+export const reqDetailInfo = (skuId) => requests({ url: `/item/${skuId}`, method: 'get' })
+
+// 添加到购物车中   url:/api/cart/addToCart/{ skuId }/{ skuNum }   method:'post'
+export const reqAddShopcar = (skuId, skuNum) => requests({ url: `/cart/addToCart/${skuId}/${skuNum}`, method: 'post' })
+
+// 获取购物车列表  url:/api/cart/cartList   method:get
+export const reqShopCartInfo = () => requests({ url: '/cart/cartList', method: 'get' })
+
+// 删除商品信息   url:/api/cart/deleteCart/{skuId}  method:delete
+export const deleteGoods = (skuId) => requests({ url: `/cart/deleteCart/${skuId}`, method: 'delete' })
+
+// 切换输入框的选中状态   url:/api/cart/checkCart/{skuID}/{isChecked}   method:get
+export const reqUpdataChecked = ({ skuID, isChecked }) => requests({ url: `/cart/checkCart/${skuID}/${isChecked}`, method: 'get' })
+

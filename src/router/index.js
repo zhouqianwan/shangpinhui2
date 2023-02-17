@@ -3,10 +3,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 // 引入路由组件
-import Home from '@/pages/Home'
-import Search from '@/pages/Search'
-import Login from '@/pages/Login'
-import Register from '@/pages/Register'
+import routes from './route'
 
 // 先把VueRouter原型对象的push，先保存一份
 let originPush = VueRouter.prototype.push
@@ -38,48 +35,9 @@ VueRouter.prototype.replcae = function (location, resolve, reject) {
 
 export default new VueRouter(
   {
-    routes: [
-      {
-        path: '/home',
-        component: Home,
-        name: 'home',
-        // 路由元信息，this.$route.meta中可以获取到
-        meta: {
-          show: true
-        }
-      },
-      {
-        // 加？表示，可能会传空值
-        path: '/search/:keyword?',
-        component: Search,
-        name: 'search',
-        meta: {
-          show: true
-        }
-      },
-      {
-        path: '/login',
-        component: Login,
-        name: 'login',
-        // 通过路由元信息，判断是否需要footer
-        meta: {
-          show: false
-        }
-      },
-      {
-        path: '/register',
-        component: Register,
-        name: 'register',
-        // 通过路由元信息，判断是否需要footer
-        meta: {
-          show: false
-        }
-      },
-      // 路由重定向
-      {
-        path: '/',
-        redirect: '/home'
-      }
-    ]
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+      return { y: 0 }
+    }
   }
 )

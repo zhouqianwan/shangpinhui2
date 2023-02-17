@@ -14,7 +14,7 @@
           </div>
           <div class="typeList">
             <a href="###">我的订单</a>
-            <a href="###">我的购物车</a>
+            <router-link to="/shopcart">我的购物车</router-link>
             <a href="###">我的尚品汇</a>
             <a href="###">尚品汇会员</a>
             <a href="###">企业采购</a>
@@ -27,14 +27,14 @@
       <!--头部第二行 搜索区域-->
       <div class="bottom">
         <h1 class="logoArea">
-          <a class="logo" title="尚品汇" href="###" target="_blank">
+          <a class="logo" title="尚品汇" href="/" target="_blank">
             <img src="./images/logo.png" alt="">
           </a>
         </h1>
         <div class="searchArea">
-          <form action="###" class="searchForm">
+          <form class="searchForm">
             <input type="text" id="autocomplete" class="input-error input-xxlarge" v-model="keyword" />
-            <button class="sui-btn btn-xlarge btn-danger" type="button" @click="goSearch">搜索</button>
+            <button class="sui-btn btn-xlarge btn-danger" type="button" @click.prevent="goSearch">搜索</button>
           </form>
         </div>
       </div>
@@ -53,9 +53,12 @@ export default {
   },
   methods: {
     goSearch() {
-      let location = { name: 'search', params: { keyword: this.keyword } }
+      let location = { name: 'search' }
+      if (this.keyword) {
+        location.params = { keyword: this.keyword }
+      }
       // 判断有没有query参数，如果有，一起带上
-      if (this.$route.query) {
+      if (this.$route.query.categoryName) {
         location.query = this.$route.query
       }
       this.$router.push(location)

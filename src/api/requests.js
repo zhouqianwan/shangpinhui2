@@ -2,6 +2,7 @@
 import axios from 'axios'
 import 'nprogress/nprogress.css'
 import nprogress from 'nprogress'
+import store from '@/store'
 
 
 // 利用axios的create方法，创建一个axios实例
@@ -13,6 +14,10 @@ const requests = axios.create({
 })
 // 请求拦截器
 requests.interceptors.request.use((config) => {
+  // 如果store中有uuid就传过来，放到请求头中
+  if (store.state.details.uuid) {
+    config.headers.userTempId = store.state.details.uuid
+  }
   nprogress.start()
   return config
 })

@@ -22,7 +22,6 @@
 
           </ul>
         </div>
-
         <!--selector-->
         <SearchSelector @getBrand='getBrand' @getAttr='getAttr'></SearchSelector>
 
@@ -42,10 +41,12 @@
           </div>
           <div class="goods-list">
             <ul class="yui3-g">
-              <li class="yui3-u-1-5" v-for="goods in goodsList" :key="">
+              <li class="yui3-u-1-5" v-for="(goods,index) in goodsList" :key="index">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"><img :src="goods.defaultImg" /></a>
+                    <router-link :to="`/detail/${goods.id}`">
+                      <img :src="goods.defaultImg" style="width:150px;height:180px;margin-top:40px" />
+                    </router-link>
                   </div>
                   <div class="price">
                     <strong>

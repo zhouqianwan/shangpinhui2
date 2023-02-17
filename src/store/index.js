@@ -6,11 +6,15 @@ Vue.use(Vuex)
 import home from './home'
 import ListContainer from './listContainer'
 import search from './search'
+import details from './detail'
+import shopcart from './shopcart'
 
 export default new Vuex.Store({
   modules: {
     home,
     ListContainer,
-    search
+    search,
+    details,
+    shopcart
   }
 })
