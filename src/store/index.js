@@ -8,6 +8,7 @@ import ListContainer from './listContainer'
 import search from './search'
 import details from './detail'
 import shopcart from './shopcart'
+import user from './user'
 
 export default new Vuex.Store({
   modules: {
@@ -15,6 +16,7 @@ export default new Vuex.Store({
     ListContainer,
     search,
     details,
-    shopcart
+    shopcart,
+    user
   }
 })

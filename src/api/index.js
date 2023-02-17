@@ -29,3 +29,12 @@ export const deleteGoods = (skuId) => requests({ url: `/cart/deleteCart/${skuId}
 // 切换输入框的选中状态   url:/api/cart/checkCart/{skuID}/{isChecked}   method:get
 export const reqUpdataChecked = ({ skuID, isChecked }) => requests({ url: `/cart/checkCart/${skuID}/${isChecked}`, method: 'get' })
 
+// 用户注册   url:/api/user/passport/register  method:post
+export const reqRegister = (data) => requests({ url: `/user/passport/register`, method: 'post', data })
+
+// 获取验证码  url:/api/user/passport/sendCode/{phone}   method:get
+export const reqGetCode = (phone) => requests({ url: `/user/passport/sendCode/${phone}`, methos: 'get' })
+
+// 用户登录  url:/api/user/passport/login
+export const reqLogin = (data) => requests({ url: '/user/passport/login', method: 'post', data })
+

@@ -8,32 +8,32 @@
       </h3>
       <div class="content">
         <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号">
+        <input type="text" placeholder="请输入你的手机号" v-model="phone">
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="content">
-        <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码">
-        <img ref="code" src="http://182.92.128.115/api/user/passport/code" alt="code">
+        <label style="margin-left:-330px">验证码:</label>
+        <input type="text" placeholder="请输入验证码" v-model="code">
+        <button style="width:100px;height:38px" @click="getCode">获取验证码</button>
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="content">
         <label>登录密码:</label>
-        <input type="text" placeholder="请输入你的登录密码">
+        <input type="password" placeholder="请输入你的登录密码" v-model="password">
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="content">
         <label>确认密码:</label>
-        <input type="text" placeholder="请输入确认密码">
+        <input type="text" placeholder="请输入确认密码" v-model="password1">
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="controls">
-        <input name="m1" type="checkbox">
+        <input name="m1" type="checkbox" :checked='agree'>
         <span>同意协议并注册《尚品汇用户协议》</span>
         <span class="error-msg">错误提示信息</span>
       </div>
       <div class="btn">
-        <button>完成注册</button>
+        <button @click="goRegister">完成注册</button>
       </div>
     </div>
 
@@ -57,13 +57,59 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
-  name: 'Register'
+  name: 'Register',
+  data() {
+    return {
+      phone: '',
+      code: '',
+      password: '',
+      password1: '',
+      agree: true
+    }
+  },
+  methods: {
+    // 发请求，进行注册
+    async goRegister() {
+      let { phone, code, password, password1 } = this
+      let data = { phone, password, code }
+      // 如果这些都有就发请求，进行注册
+      if (phone && password && code && password == password1) {
+        try {
+          await this.$store.dispatch('goRegister', data)
+          this.$router.push({ name: 'login' })
+        } catch (error) {
+          alert(error.message)
+        }
+      } else {
+        alert('请填写完整信息！')
+      }
+    },
+    // 获取验证码
+    async getCode() {
+      let { phone } = this
+      if (phone) {
+        try {
+          await this.$store.dispatch('getCode', phone)
+          this.code = this.$store.state.user.code
+        } catch (error) {
+          alert(error.message)
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapState({
+      codes: state => state.user.code
+    })
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .register-container {
+  text-align: center;
   .register {
     width: 1200px;
     height: 445px;
@@ -103,6 +149,7 @@ export default {
         width: 96px;
         text-align: right;
         display: inline-block;
+        margin-left: -430px;
       }
 
       input {
@@ -122,7 +169,7 @@ export default {
       .error-msg {
         position: absolute;
         top: 100%;
-        left: 495px;
+        left: 500px;
         color: red;
       }
     }
