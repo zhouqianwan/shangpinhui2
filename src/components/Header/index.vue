@@ -6,7 +6,11 @@
         <div class="container">
           <div class="loginList">
             <p>尚品汇欢迎您！</p>
-            <p>
+            <p v-if="loginName">
+              <a>{{loginName}}</a>
+              <a class="register" @click="logOut">退出登录</a>
+            </p>
+            <p v-if="!loginName">
               <span>请</span>
               <router-link to="/login">登录</router-link>
               <router-link to="/register" class="register">免费注册</router-link>
@@ -62,7 +66,31 @@ export default {
         location.query = this.$route.query
       }
       this.$router.push(location)
+    },
+    // 退出登录
+    async logOut() {
+      try {
+        await this.$store.dispatch('getLogOut')
+      } catch (error) {
+        error.message
+      }
+    },
+    // 发请求
+    async reqUserInfo() {
+      try {
+        await this.$store.dispatch('getUsersInfo')
+      } catch (error) {
+        alert(error.message)
+      }
     }
+  },
+  computed: {
+    loginName() {
+      return this.$store.state.user.loginName
+    }
+  },
+  mounted() {
+    this.reqUserInfo()
   }
 }
 </script>

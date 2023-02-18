@@ -1,8 +1,10 @@
-import { reqRegister, reqGetCode, reqLogin } from '@/api'
+import { reqRegister, reqGetCode, reqLogin, reqUsersInfo, reqLogOut } from '@/api'
+import { removeToken } from '@/utils/token.js'
 
 const state = {
   code: '',
-  token: ''
+  token: localStorage.getItem('TOKEN'),
+  loginName: ''
 }
 
 const mutations = {
@@ -12,8 +14,17 @@ const mutations = {
   },
   // 登录
   GOLOGIN(state, value) {
-    console.log(55555);
     state.token = value
+  },
+  // 获取用户登录信息
+  GETUSERSINFO(state, value) {
+    state.loginName = value
+  },
+  // 退出登录
+  GETLOGOUT() {
+    state.token = ''
+    state.loginName = ''
+    removeToken()
   }
 }
 
@@ -40,11 +51,33 @@ const actions = {
   // 进行登录
   async goLogin({ commit }, data) {
     let res = await reqLogin(data)
-
     if (res.code == 200) {
       commit('GOLOGIN', res.data.token)
+      // 持久存储到localStorage中
+      localStorage.setItem('TOKEN', res.data.token)
+    } else {
+      return Promise.reject(new Error('faile'))
     }
 
+  },
+  // 获取用户信息
+  async getUsersInfo({ commit }) {
+    let res = await reqUsersInfo()
+    if (res.code == 200) {
+      commit('GETUSERSINFO', res.data.loginName)
+    } else {
+      return Promise.reject(new Error('faile'))
+    }
+  },
+  // 退出登录
+  async getLogOut({ commit }) {
+    let res = await reqLogOut()
+    if (res.code == 200) {
+      commit('GETLOGOUT')
+      return 'ok'
+    } else {
+      return Promise.reject(new Error('faile'))
+    }
   }
 }
 

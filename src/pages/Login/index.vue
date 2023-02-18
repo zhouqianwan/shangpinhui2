@@ -76,9 +76,14 @@ export default {
   },
   methods: {
     // 登录
-    goLogin() {
+    async goLogin() {
       let { phone, password } = this
-      this.$store.dispatch('goLogin', { phone, password })
+      try {
+        await this.$store.dispatch('goLogin', { phone, password })
+        this.$router.push('/home')
+      } catch (error) {
+        alert(error.message)
+      }
     }
   }
 }

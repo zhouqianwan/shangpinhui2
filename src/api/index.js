@@ -38,3 +38,23 @@ export const reqGetCode = (phone) => requests({ url: `/user/passport/sendCode/${
 // 用户登录  url:/api/user/passport/login
 export const reqLogin = (data) => requests({ url: '/user/passport/login', method: 'post', data })
 
+// 获取用户登录信息   url:/api/user/passport/auth/getUserInfo   method:get
+export const reqUsersInfo = () => requests({ url: '/user/passport/auth/getUserInfo', method: 'get' })
+
+// 退出登录   url:/api/user/passport/logout   method:get
+export const reqLogOut = () => requests({ url: '/user/passport/logout', method: 'get' })
+
+// 获取用户地址数据   url:/api/user/userAddress/auth/findUserAddressList   method:get
+export const reqAddress = () => requests({ url: '/user/userAddress/auth/findUserAddressList', method: 'get' })
+
+// 通过mock数据，获取过来的数据  url:/api/addres
+export const reqAddres = () => mockRequests({ url: '/addres', method: 'get' })
+
+// 获取订单交易页信息   url:/api/order/auth/trade  method:get
+export const reqOrderInfo = () => requests({ url: '/order/auth/trade', method: 'get' })
+
+// 提交订单  url:'/api/order/auth/submitOrder?tradeNo={tradeNo}   method:post
+export const reqCommitOrder = (tradeNo, data) => requests({ url: `/order/auth/submitOrder?tradeNo=${tradeNo}`, method: 'post', data })
+
+// 获取订单支付信息   url:/api/payment/weixin/createNative/{orderId}   method:get
+export const reqGetPayInfo = (orderId) => requests({ url: `/payment/weixin/createNative/${orderId}`, method: 'get' })

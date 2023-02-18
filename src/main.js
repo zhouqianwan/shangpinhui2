@@ -18,6 +18,7 @@ import 'swiper/swiper.min.css'
 import 'swiper/swiper-bundle.min.css'
 // 引入carousel,将轮播图封装成一个独立的组件
 import Carousel from '@/components/Carousel'
+import * as API from '@/api'
 Vue.component('Carousel', Carousel)
 // 把分页器注册为全局组件
 import Pagination from '@/components/Pagination'
@@ -27,6 +28,7 @@ Vue.component('Pagination', Pagination)
 new Vue({
   beforeCreate() {
     Vue.prototype.$bus = this
+    Vue.prototype.$API = API
   },
   render: h => h(App),
   router,

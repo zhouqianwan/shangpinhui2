@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 // 引入路由组件
 import routes from './route'
+import Store from '@/store'
 
 // 先把VueRouter原型对象的push，先保存一份
 let originPush = VueRouter.prototype.push
@@ -33,7 +34,7 @@ VueRouter.prototype.replcae = function (location, resolve, reject) {
 }
 
 
-export default new VueRouter(
+let router = new VueRouter(
   {
     routes,
     scrollBehavior(to, from, savedPosition) {
@@ -41,3 +42,36 @@ export default new VueRouter(
     }
   }
 )
+
+router.beforeEach(async (to, from, next) => {
+  // 如果有token的值，说明已经登录了
+  if (Store.state.user.token) {
+    // 登录之后，就不能再去login页面了
+    if (to.path == '/login') {
+      next('/home')
+    } else {
+      // 登录没去login页面  
+      /* 如果有loginName说明有登录信息 */
+      if (Store.state.user.loginName) {
+        next()
+      } else {
+        /* 登录了，没用户信息，发请求重新获取用户信息  */
+        try {
+          await Store.dispatch('getUsersInfo')
+          next()
+        } catch (error) {
+          // 如果获取不到用户信息（token失效）  发退出登录的请求，清除各个数据
+          Store.dispatch('getLogOut')
+          next('/login')
+        }
+      }
+      next()
+    }
+  } else {
+    // 说明没登录
+    next()
+  }
+})
+
+
+export default router

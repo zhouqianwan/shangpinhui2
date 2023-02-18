@@ -54,7 +54,7 @@
           <i class="summoney">{{totalPrice}}.00</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <a class="sum-btn" target="_blank" @click="goTrade">结算</a>
         </div>
       </div>
     </div>
@@ -171,6 +171,10 @@ export default {
         alert(error.message)
       }
       this.getData()
+    },
+    // 点击结算 跳转到trade页面中
+    goTrade() {
+      this.$router.push('/trade')
     }
   }
 }
