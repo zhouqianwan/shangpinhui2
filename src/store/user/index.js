@@ -56,7 +56,7 @@ const actions = {
       // 持久存储到localStorage中
       localStorage.setItem('TOKEN', res.data.token)
     } else {
-      return Promise.reject(new Error('faile'))
+      return Promise.reject(new Error('登录失败'))
     }
 
   },

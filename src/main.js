@@ -23,6 +23,17 @@ Vue.component('Carousel', Carousel)
 // 把分页器注册为全局组件
 import Pagination from '@/components/Pagination'
 Vue.component('Pagination', Pagination)
+// 引入elementui的部分
+import { Button, Select, MessageBox, Alert } from 'element-ui';
+Vue.component(Button.name, Button);
+Vue.component(Select.name, Select);
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
+import VueLazyLoad from 'vue-lazyload'
+import gril from '@/assets/12.jpg'
+Vue.use(VueLazyLoad, {
+  loading: gril
+})
 
 
 new Vue({

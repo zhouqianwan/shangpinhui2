@@ -8,7 +8,7 @@
         </h4>
         <div class="paymark">
           <span class="fl">请您在提交订单<em class="orange time">4小时</em>之内完成支付，超时订单会自动取消。订单号：<em>{{orderId}}</em></span>
-          <span class="fr"><em class="lead">应付金额：</em><em class="orange money">￥17,654</em></span>
+          <span class="fr"><em class="lead">应付金额：</em><em class="orange money">￥{{payInfo.totalFee}}</em></span>
         </div>
       </div>
       <div class="checkout-info">
@@ -21,8 +21,6 @@
         <h4>支付宝账户信息：（很重要，<span class="save">请保存！！！</span>）</h4>
         <ul>
           <li>支付帐号：11111111</li>
-          <li>密码：111111</li>
-          <li>支付密码：111111</li>
         </ul>
       </div>
       <div class="checkout-steps">
@@ -65,7 +63,7 @@
         <div class="hr"></div>
 
         <div class="submit">
-          <router-link class="btn" to="/paysuccess">立即支付</router-link>
+          <a class="btn" @click="open">立即支付</a>
         </div>
         <div class="otherpay">
           <div class="step-tit">
@@ -82,11 +80,15 @@
 </template>
 
 <script>
+import QRCode from 'qrcode'
+import Vue from 'vue'
 export default {
   name: 'Pay',
   data() {
     return {
-      payInfo: {}
+      payInfo: {},
+      code: '',
+      timer: null
     }
   },
   computed: {
@@ -106,12 +108,69 @@ export default {
       } else {
         alert()
       }
+    },
+    // 弹出警示框
+    async open() {
+      let url = await QRCode.toDataURL('1234456')
+      this.$alert(`<img src=${url}></img>`, 'HTML 片段', {
+        dangerouslyUseHTMLString: true,
+        title: '请使用微信支付',
+        center: 'true',
+        showClose: false,
+        showCancelButton: true,
+        cancelButtonText: '支付遇见问题',
+        showConfirmButton: true,
+        confirmButtonText: '支付成功',
+        beforeClose: (action, instance, done) => {
+          // 如果点击取消按钮，说明支付遇到问题
+          if (action == 'cancel') {
+            this.code = ''
+            alert('有问题联系帅哥周百万')
+            clearInterval(this.timer)
+            this.timer = ''
+
+            // 关闭弹出框
+            done()
+          } else {
+            console.log(88888)
+            // 点击的确认按钮
+            // if (this.code == 200) {
+            // 说明支付成功
+            clearInterval(this.timer)
+            this.timer = null
+            console.log(this.timer)
+            done()
+            this.$router.push('/paysuccess')
+            // }
+          }
+        }
+      })
+      // 如果没有定时器，就开启他,让他不断发请求，获取订单支付状态
+      if (!this.timer) {
+        // 不断发请求，判断是否提交成功，提交成功之后，将code的值存储到data中
+        this.timer = setInterval(async () => {
+          console.log(this.timer)
+          let res = await this.$API.reqOrderState(this.orderId)
+          if (res.code == 200) {
+            this.code = res.code
+            clearInterval(this.timer)
+            this.timer = null
+            // 关闭弹出框
+            this.$msgbox.close()
+            // 跳转到支付成功路由
+            this.$router.push('/paysuccess')
+          }
+        }, 1000)
+      }
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+li {
+  list-style: none;
+}
 .pay-main {
   margin-bottom: 20px;
 

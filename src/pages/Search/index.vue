@@ -45,7 +45,7 @@
                 <div class="list-wrap">
                   <div class="p-img">
                     <router-link :to="`/detail/${goods.id}`">
-                      <img :src="goods.defaultImg" style="width:150px;height:180px;margin-top:40px" />
+                      <img v-lazy="goods.defaultImg" style="width:150px;height:180px;margin-top:40px" />
                     </router-link>
                   </div>
                   <div class="price">
@@ -182,7 +182,7 @@ export default {
       this.searchParams.order = newOrder
       this.getData()
     },
-    // 点击分页器更新pageNo的值
+    // 点击分页器更新pageNo的值   子传给父
     getPageNo(value) {
       this.searchParams.pageNo = value
       this.getData()

@@ -69,7 +69,14 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     // 说明没登录
-    next()
+    // 如果去的是pay相关   center相关  trade相关  禁止通行
+    let To = to.path
+    if (To.indexOf('pay') != -1 || To.indexOf('center') != -1 || To.indexOf('trade') != -1) {
+      console.log(To);
+      next(`/login?redirect=${To}`)
+    } else {
+      next()
+    }
   }
 })
 

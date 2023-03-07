@@ -80,10 +80,12 @@ export default {
       let { phone, password } = this
       try {
         await this.$store.dispatch('goLogin', { phone, password })
-        this.$router.push('/home')
-      } catch (error) {
-        alert(error.message)
-      }
+        if (this.$route.query.redirect) {
+          this.$router.push(this.$route.query.redirect)
+        } else {
+          this.$router.push('/home')
+        }
+      } catch (error) {}
     }
   }
 }

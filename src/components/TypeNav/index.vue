@@ -42,7 +42,7 @@
         <a href="###">闪购</a>
         <a href="###">团购</a>
         <a href="###">有趣</a>
-        <a href="###">秒杀{{currentIndex}}</a>
+        <a href="###">秒杀</a>
       </nav>
     </div>
   </div>
