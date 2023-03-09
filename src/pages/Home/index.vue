@@ -1,7 +1,7 @@
 <template>
   <div>
     <TypeNav></TypeNav>
-3333333333333
+333333333333333333333333333333333
     <ListContainer></ListContainer>
     <Recommend></Recommend>
     <Rank></Rank>
